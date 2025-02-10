@@ -1,0 +1,30 @@
+{
+  "name": "designhub-backend",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000D\u0000e\u0000s\u0000i\u0000g\u0000n\u0000H\u0000u\u0000b\u0000-\u0000B\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlokitha/DesignHub-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jlokitha/DesignHub-Backend/issues"
+  },
+  "homepage": "https://github.com/jlokitha/DesignHub-Backend#readme",
+  "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "express": "^4.21.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
