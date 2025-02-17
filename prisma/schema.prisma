@@ -14,31 +14,31 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(uuid())
+  id         Int         @id @default(autoincrement())
   email      String      @unique
   password   String
   components Component[]
 }
 
 model Component {
-  id          String         @id @default(uuid())
+  id          Int            @id @default(autoincrement())
   title       String
   code        String
   description String
-  userId      String
+  userId      Int
   user        User           @relation(fields: [userId], references: [id])
   tags        ComponentTag[]
 }
 
 model Tag {
-  id         String         @id @default(uuid())
+  id         Int            @id @default(autoincrement())
   name       String         @unique
   components ComponentTag[]
 }
 
 model ComponentTag {
-  componentId String
-  tagId       String
+  componentId Int
+  tagId       Int
   component   Component @relation(fields: [componentId], references: [id])
   tag         Tag       @relation(fields: [tagId], references: [id])
 
