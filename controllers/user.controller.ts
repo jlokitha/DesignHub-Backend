@@ -1,16 +1,20 @@
 import { UserService } from "../services/user.service";
 import { Request, Response } from 'express';
+import User from "../models/user.model";
 
 const userService = new UserService();
 
 export const register = async (req: Request, res:Response) => {
-    const { email, password } = req.body;
+    const user: User = req.body;
     try {
-        await userService.register(email, password);
+        await userService.register(user);
         res.status(201).json('User registered successfully');
     } catch (error) {
-        console.log(error);
-        res.status(400).json('User registration failed');
+        if (error instanceof Error) {
+            res.status(400).json(error.message);
+        } else {
+            res.status(400).json('Unexpected error occurred');
+        }
     }
 };
 

@@ -1,28 +1,35 @@
-import {Prisma, PrismaClient } from "@prisma/client";
+import {PrismaClient } from "@prisma/client";
+import User from "../models/user.model";
 
 const prisma = new PrismaClient();
 
 export class UserRepository {
-    async createUser(email: string, password: string) {
-        try {
-            return await prisma.user.create({
-                data: {
-                    email,
-                    password,
-                },
-            });
-        } catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new Error('A user with this email already exists');
-                }
+    async createUser(user: User) {
+        const existingUsername = await prisma.user.findUnique({
+            where: {
+                username: user.username
             }
-            throw error;
+        });
+        if (existingUsername) {
+            throw new Error('A user with this username already exists');
         }
-    }
 
-    async findUserById(userId: number) {
-        return prisma.user.findUnique({ where: { id: userId } });
+        const existingEmail = await prisma.user.findUnique({
+            where: {
+                email: user.email
+            }
+        });
+        if (existingEmail) {
+            throw new Error('A user with this email already exists');
+        }
+
+        return prisma.user.create({
+            data: {
+                username: user.username,
+                email: user.email,
+                password: user.password,
+            },
+        });
     }
 
     async findUserByEmail(email: string) {
