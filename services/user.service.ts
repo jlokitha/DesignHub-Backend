@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt, {Secret} from "jsonwebtoken";
 import {UserRepository} from "../repositories/user.repository";
+import User from "../models/user.model";
 
 const {SECRET_KEY, REFRESH_TOKEN} = process.env;
 
@@ -11,14 +12,9 @@ export class UserService {
         this.userRepository = new UserRepository();
     }
 
-    async register(email: string, password: string) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        try {
-            return await this.userRepository.createUser(email, hashedPassword);
-        } catch (e) {
-            throw new Error("User already exists");
-        }
+    async register(user: User) {
+        user.password = await bcrypt.hash(user.password, 10);
+        return await this.userRepository.createUser(user);
     }
 
     async login(email: string, password: string) {
