@@ -26,7 +26,8 @@ export class UserService {
 
         const token = jwt.sign({username: user.email}, SECRET_KEY as Secret, {expiresIn: "1m"});
         const refreshToken = jwt.sign({username: user.email}, REFRESH_TOKEN as Secret, {expiresIn: "7d"});
-        return {accessToken: token, refreshToken: refreshToken};
+
+        return {accessToken: token, refreshToken: refreshToken, user: {...user, password: undefined}};
     }
 
     async refreshToken(authHeader: string | undefined) {
@@ -37,5 +38,11 @@ export class UserService {
         const payload = jwt.verify(refresh_token as string, REFRESH_TOKEN as Secret) as {username: string, iat: number};
         const token = jwt.sign({username: payload.username}, SECRET_KEY as Secret, {expiresIn: "1m"});
         return {accessToken: token};
+    }
+
+    async findUserByEmail(email: string | undefined) {
+        if (!email) throw new Error("No email provided");
+        const user = await this.userRepository.findUserByEmail(email);
+        return {...user, password: undefined};
     }
 }
