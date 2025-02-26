@@ -37,3 +37,13 @@ export const refreshToken = async (req: Request, res:Response) => {
         res.status(400).send("error refreshing token");
     }
 };
+
+export const findUserByEmail = async (req: Request, res:Response) => {
+    const email = req.body.email;
+    try {
+        const user = await userService.findUserByEmail(email);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json('User not found');
+    }
+};

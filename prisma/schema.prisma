@@ -23,10 +23,12 @@ model User {
 
 model Component {
   id          Int            @id @default(autoincrement())
-  title       String
+  title       String         @db.VarChar(65)
   code        String
-  description String
+  description String         @db.VarChar(260)
+  createdAt   DateTime       @default(now())
   userId      Int
+  image       String?        @unique
   user        User           @relation(fields: [userId], references: [id])
   tags        ComponentTag[]
 }
