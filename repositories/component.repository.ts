@@ -51,10 +51,78 @@ export class ComponentRepository {
         });
     }
 
+    async updateComponent(componentId: number, component: Component) {
+        return prisma.$transaction(async (prisma) => {
+            const updatedComponent = await prisma.component.update({
+                where: {id: componentId},
+                data: {
+                    title: component.title,
+                    code: component.code,
+                    description: component.description,
+                    userId: component.userId,
+                },
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                        },
+                    },
+                },
+            });
+
+            await prisma.componentTag.deleteMany({
+                where: {componentId},
+            });
+
+            if (component.tags && component.tags.length > 0) {
+                for (const tag of component.tags) {
+                    let existingTag = await prisma.tag.findUnique({
+                        where: {name: tag.name},
+                    });
+
+                    if (!existingTag) {
+                        existingTag = await prisma.tag.create({
+                            data: {name: tag.name},
+                        });
+                    }
+
+                    await prisma.componentTag.create({
+                        data: {
+                            componentId: updatedComponent.id,
+                            tagId: existingTag.id,
+                        },
+                    });
+                }
+            }
+
+            return {
+                ...updatedComponent,
+                tags: component.tags,
+                username: updatedComponent.user.username,
+            };
+        });
+    }
+
+    async deleteComponent(componentId: number) {
+        await prisma.componentTag.deleteMany({
+            where: {componentId},
+        });
+
+        return prisma.component.delete({
+            where: {id: componentId},
+        });
+    }
+
     async updateComponentImage(componentId: number, imageName: string) {
         return prisma.component.update({
             where: {id: componentId},
             data: {image: imageName},
+        });
+    }
+
+    async findComponentById(componentId: number) {
+        return prisma.component.findUnique({
+            where: {id: componentId},
         });
     }
 

@@ -2,6 +2,7 @@ import {ComponentRepository} from "../repositories/component.repository";
 import Component from "../models/component.model";
 import {UploadedFile} from "express-fileupload";
 import path from "path";
+import * as fs from "node:fs";
 
 export class ComponentService {
     private componentRepository: ComponentRepository;
@@ -17,25 +18,61 @@ export class ComponentService {
         componentData: Component,
         imageFile?: UploadedFile
     ): Promise<Component> {
-        // Save the component data (without the image) in the repository (e.g., DB)
         const createdComponent = await this.componentRepository.createComponent(componentData);
 
-        // If an image file was provided, process and save it
         if (imageFile) {
-            // Handle possible array of files; assume single file for now
             const file = imageFile;
 
-            // Create a new filename using the component id, current timestamp, and the original file extension
             const newFileName = `component_${createdComponent.id}${path.extname(file.name)}`;
             const uploadPath = path.join(this.uploadDir, newFileName);
 
-            // Move the file to the uploads folder
             await file.mv(uploadPath);
 
             await this.componentRepository.updateComponentImage(createdComponent.id, newFileName);
             createdComponent.image = `${this.baseUrl}/uploads/${newFileName}`;
         }
         return createdComponent;
+    }
+
+    async updateComponent(
+        id: number,
+        componentData: Component,
+        imageFile?: UploadedFile
+    ): Promise<Component> {
+        const updatedComponent = await this.componentRepository.updateComponent(id, componentData);
+
+        if (imageFile) {
+            const file = imageFile;
+
+            const newFileName = `component_${updatedComponent.id}${path.extname(file.name)}`;
+            const uploadPath = path.join(this.uploadDir, newFileName);
+
+            await file.mv(uploadPath);
+
+            await this.componentRepository.updateComponentImage(updatedComponent.id, newFileName);
+            updatedComponent.image = `${this.baseUrl}/uploads/${newFileName}`;
+        }
+        return updatedComponent;
+    }
+
+    async deleteComponent(id: number): Promise<void> {
+        const component = await this.componentRepository.findComponentById(id);
+
+        if (component && component.image) {
+            const imageFileName = path.basename(component.image);
+            const imagePath = path.join(this.uploadDir, imageFileName);
+
+            if (fs.existsSync(imagePath)) {
+                try {
+                    await fs.promises.unlink(imagePath);
+                    console.log(`Deleted image file: ${imagePath}`);
+                } catch (error) {
+                    console.error(`Error deleting image file: ${error}`);
+                }
+            }
+        }
+
+        await this.componentRepository.deleteComponent(id);
     }
 
     async findAllComponents(): Promise<Component[]> {

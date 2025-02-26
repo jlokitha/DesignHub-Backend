@@ -1,12 +1,19 @@
 import {Router} from "express";
-import {createComponent, findAllComponents} from "../controllers/component.controller";
+import {
+    createComponent,
+    deleteComponent,
+    findAllComponents,
+    updateComponent
+} from "../controllers/component.controller";
 
 const router = Router();
 
-// Create a new component
 router.post('/', createComponent);
 
-// Get all components
+router.put('/:id', updateComponent);
+
+router.delete('/:id', deleteComponent);
+
 router.get('/', findAllComponents);
 
 export default router;
