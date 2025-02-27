@@ -77,7 +77,7 @@ export class ComponentRepository {
             if (component.tags && component.tags.length > 0) {
                 for (const tag of component.tags) {
                     let existingTag = await prisma.tag.findUnique({
-                        where: {id: tag.id},
+                        where: {name: tag.name},
                     });
 
                     if (!existingTag) {
