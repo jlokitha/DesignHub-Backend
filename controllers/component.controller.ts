@@ -1,8 +1,6 @@
 import {ComponentService} from "../services/component.service";
 import { Request, Response } from 'express';
-import Component from "../models/component.model";
-import path from "path";
-import fileUpload, {UploadedFile} from "express-fileupload";
+import {UploadedFile} from "express-fileupload";
 
 const componentService = new ComponentService();
 
@@ -19,14 +17,15 @@ export const createComponent = async (req: Request, res: Response) => {
         }
 
         const componentData = {
-            title,
-            code,
-            description,
+            title: title,
+            code: code,
+            description: description,
             tags: parsedTags,
             userId: Number(userId),
+            imageFile: imageFile
         };
 
-        const createdComponent = await componentService.createComponent(componentData, imageFile);
+        const createdComponent = await componentService.createComponent(componentData);
 
         res.status(201).json(createdComponent);
     } catch (error) {
@@ -49,14 +48,15 @@ export const updateComponent = async (req: Request, res: Response) => {
         }
 
         const componentData = {
-            title,
-            code,
-            description,
+            title: title,
+            code: code,
+            description: description,
             tags: parsedTags,
             userId: Number(userId),
+            imageFile: imageFile
         };
 
-        const updatedComponent = await componentService.updateComponent(Number(id), componentData, imageFile);
+        const updatedComponent = await componentService.updateComponent(Number(id), componentData);
 
         res.status(200).json(updatedComponent);
     } catch (error) {

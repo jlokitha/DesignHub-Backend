@@ -1,4 +1,5 @@
 import Tag from "./tag.model";
+import {UploadedFile} from "express-fileupload";
 
 interface Component {
     id?: number;
@@ -10,7 +11,7 @@ interface Component {
     createdAt?: Date;
     image?: string | null;
     username?: string;
-    imageFile?: File;
+    imageFile?: UploadedFile | undefined;
 }
 
 export default Component;

@@ -14,14 +14,11 @@ export class ComponentService {
         this.uploadDir = path.join(__dirname, '../uploads');
     }
 
-    async createComponent(
-        componentData: Component,
-        imageFile?: UploadedFile
-    ): Promise<Component> {
+    async createComponent(componentData: Component): Promise<Component> {
         const createdComponent = await this.componentRepository.createComponent(componentData);
 
-        if (imageFile) {
-            const file = imageFile;
+        if (componentData.imageFile) {
+            const file = componentData.imageFile;
 
             const newFileName = `component_${createdComponent.id}${path.extname(file.name)}`;
             const uploadPath = path.join(this.uploadDir, newFileName);
@@ -34,15 +31,11 @@ export class ComponentService {
         return createdComponent;
     }
 
-    async updateComponent(
-        id: number,
-        componentData: Component,
-        imageFile?: UploadedFile
-    ): Promise<Component> {
+    async updateComponent(id: number, componentData: Component): Promise<Component> {
         const updatedComponent = await this.componentRepository.updateComponent(id, componentData);
 
-        if (imageFile) {
-            const file = imageFile;
+        if (componentData.imageFile) {
+            const file = componentData.imageFile;
 
             const newFileName = `component_${updatedComponent.id}${path.extname(file.name)}`;
             const uploadPath = path.join(this.uploadDir, newFileName);
@@ -51,6 +44,8 @@ export class ComponentService {
 
             await this.componentRepository.updateComponentImage(updatedComponent.id, newFileName);
             updatedComponent.image = `${this.baseUrl}/uploads/${newFileName}`;
+        } else {
+            updatedComponent.image = updatedComponent.image ? `${this.baseUrl}/uploads/${updatedComponent.image}` : null;
         }
         return updatedComponent;
     }

@@ -59,7 +59,7 @@ export class ComponentRepository {
                     title: component.title,
                     code: component.code,
                     description: component.description,
-                    userId: component.userId,
+                    userId: componentId,
                 },
                 include: {
                     user: {
@@ -71,13 +71,13 @@ export class ComponentRepository {
             });
 
             await prisma.componentTag.deleteMany({
-                where: {componentId},
+                where: {componentId: componentId},
             });
 
             if (component.tags && component.tags.length > 0) {
                 for (const tag of component.tags) {
                     let existingTag = await prisma.tag.findUnique({
-                        where: {name: tag.name},
+                        where: {id: tag.id},
                     });
 
                     if (!existingTag) {
