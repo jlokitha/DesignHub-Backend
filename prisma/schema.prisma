@@ -15,27 +15,27 @@ datasource db {
 
 model User {
   id         Int         @id @default(autoincrement())
-  username   String      @unique
-  email      String      @unique
-  password   String
+  username   String      @unique @db.VarChar(50)
+  email      String      @unique @db.VarChar(100)
+  password   String      @db.VarChar(100)
   components Component[]
 }
 
 model Component {
   id          Int            @id @default(autoincrement())
-  title       String         @db.VarChar(65)
-  code        String
+  title       String         @db.VarChar(100)
+  code        String         @db.VarChar(1000)
   description String         @db.VarChar(260)
   createdAt   DateTime       @default(now())
   userId      Int
-  image       String?        @unique
+  image       String?        @unique @db.VarChar(255)
   user        User           @relation(fields: [userId], references: [id])
   tags        ComponentTag[]
 }
 
 model Tag {
   id         Int            @id @default(autoincrement())
-  name       String         @unique
+  name       String         @unique @db.VarChar(20)
   components ComponentTag[]
 }
 

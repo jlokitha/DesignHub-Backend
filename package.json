@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/jlokitha/DesignHub-Backend#readme",
   "dependencies": {
-    "@prisma/client": "^6.3.1",
+    "@prisma/client": "^6.5.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -32,12 +32,13 @@
     "express": "^4.21.2",
     "express-fileupload": "^1.5.1",
     "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/express-fileupload": "^1.5.1",
     "@types/node": "^22.13.1",
-    "prisma": "^6.3.1",
+    "prisma": "^6.5.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }

@@ -59,7 +59,7 @@ export class ComponentRepository {
                     title: component.title,
                     code: component.code,
                     description: component.description,
-                    userId: componentId,
+                    userId: component.userId,
                 },
                 include: {
                     user: {
